@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.ScatterChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="777.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wboguta.GuiController">
+   <children>
+      <Button fx:id="buttonRun" layoutX="683.0" layoutY="38.0" mnemonicParsing="false" onAction="#buttonRunClicked" prefHeight="25.0" prefWidth="58.0" text="Run" />
+      <ComboBox fx:id="comboBoxFunctions" editable="true" layoutX="72.0" layoutY="14.0" prefWidth="150.0">
+       <items>
+           <FXCollections fx:factory="observableArrayList">
+               <String fx:value="f(x) = 2*(x^2+1)" />
+               <String fx:value="other function2" />
+               <String fx:value="other function3" />
+           </FXCollections>
+       </items>
+      </ComboBox>
+      <ScatterChart fx:id="scatterChart" alternativeRowFillVisible="false" cache="true" cacheHint="SPEED" cacheShape="false" centerShape="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" layoutX="1.0" layoutY="85.0" prefHeight="487.0" prefWidth="730.0" scaleShape="false" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
+        <xAxis>
+          <NumberAxis label="x" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis label="f(x)" side="LEFT" />
+        </yAxis>
+      </ScatterChart>
+      <Label layoutX="14.0" layoutY="18.0" text="Function" />
+      <Label layoutX="85.0" layoutY="55.0" text="Population Size" />
+      <Label layoutX="246.0" layoutY="55.0" text="Genotype Size" />
+      <TextField fx:id="textFieldPopulationSize" layoutX="176.0" layoutY="51.0" prefHeight="25.0" prefWidth="46.0" text="10" />
+      <TextField fx:id="textFieldGenotypeSize" layoutX="329.0" layoutY="51.0" prefHeight="25.0" prefWidth="46.0" text="8" />
+      <TextField fx:id="textFieldIterations" layoutX="455.0" layoutY="51.0" prefHeight="25.0" prefWidth="46.0" text="10" />
+      <Label layoutX="397.0" layoutY="55.0" text="Iterations" />
+      <TextField layoutX="329.0" layoutY="14.0" prefHeight="25.0" prefWidth="46.0" />
+      <TextField layoutX="455.0" layoutY="14.0" prefHeight="25.0" prefWidth="46.0" />
+      <Label layoutX="260.0" layoutY="18.0" text="Range from" />
+      <Label layoutX="398.0" layoutY="18.0" text="Range to" />
+   </children>
+</Pane>
