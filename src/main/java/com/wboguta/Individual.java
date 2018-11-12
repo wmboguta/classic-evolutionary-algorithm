@@ -7,12 +7,17 @@ public class Individual implements Cloneable{
 
     private BitSet genotype;
     private int genotypeSize;
-    private int adaptation;
+    private double adaptation;
     private double probability;
+    private double rangeFrom;
+    private double rangeTo;
 
 
-    public Individual(int genotypeSize) {
+    public Individual(int genotypeSize, double rangeFrom, double rangeTo) {
         this.genotypeSize = genotypeSize;
+        this.rangeFrom = rangeFrom;
+        this.rangeTo =  rangeTo;
+
         genotype = new BitSet(genotypeSize);
 
         for (int i = 0; i < genotypeSize; i++) {
@@ -31,7 +36,7 @@ public class Individual implements Cloneable{
     }
 
 
-    public int decodeGenotype() {
+    public int decodeGenotypeInt() {
         int result = 0;
         for (int i = 0; i < genotypeSize; i++) {
             if (genotype.get(i)) {
@@ -41,6 +46,15 @@ public class Individual implements Cloneable{
         result &= Integer.MAX_VALUE;
         return result;
     }
+
+    public double decodeGenotypeDouble() {
+        double floatingPoint;
+        floatingPoint = rangeFrom + ((rangeTo-rangeFrom)*decodeGenotypeInt()) / (Math.pow(2, genotypeSize) - 1);
+        return floatingPoint;
+    }
+
+
+
 
     public void flipBit(int index) {
         genotype.flip(index);
@@ -54,11 +68,11 @@ public class Individual implements Cloneable{
         return genotype.get(index);
     }
 
-    public void setAdaptation(int adaptation) {
+    public void setAdaptation(double adaptation) {
         this.adaptation = adaptation;
     }
 
-    public int getAdaptation() {
+    public double getAdaptation() {
         return adaptation;
     }
 

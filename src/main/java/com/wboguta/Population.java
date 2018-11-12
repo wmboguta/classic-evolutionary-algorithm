@@ -16,13 +16,13 @@ public class Population {
     private int genotypeSize;
     static int iterator;
 
-    public Population(int populationSize, int genotypeSize) {
+    public Population(int populationSize, int genotypeSize, double rangeFrom, double rangeTo) {
         this.populationSize = populationSize;
         this.genotypeSize = genotypeSize;
         container = new ArrayList<Individual>();
         prevContainer = new ArrayList<Individual>();
         for(int i=0; i<populationSize; i++) {
-            container.add(new Individual(genotypeSize));
+            container.add(new Individual(genotypeSize, rangeFrom, rangeTo));
         }
         iterator = 0;
     }
@@ -54,7 +54,7 @@ public class Population {
 //        System.out.println(randomIndividual1);
 //        System.out.println(randomIndividual2);
 
-        if(randomIndividual2.decodeGenotype() == randomIndividual1.decodeGenotype()) {
+        if(randomIndividual2.decodeGenotypeInt() == randomIndividual1.decodeGenotypeInt()) {
             System.out.println("Nothing to cross over, genotypes are the same");
         }
 
@@ -88,9 +88,9 @@ public class Population {
         // calculate adaptation
         for (int i = 0; i < populationSize; i++) {
             Individual individual  = container.get(i);
-            Argument x = new Argument("x", individual.decodeGenotype());
+            Argument x = new Argument("x", individual.decodeGenotypeDouble());
             Expression expression = new Expression("f(x)",function, x);
-            individual.setAdaptation((int) expression.calculate());
+            individual.setAdaptation(expression.calculate());
             //mXparser.consolePrintln("Res: " + expression.getExpressionString() + " = " + individual.getAdaptation());
         }
 
@@ -134,7 +134,7 @@ public class Population {
     public double[] getNextIndividualXY() {
 
         double[] xy = {0, 0};
-        xy[0] = container.get(iterator).decodeGenotype();
+        xy[0] = container.get(iterator).decodeGenotypeDouble();
         xy[1] = container.get(iterator).getAdaptation();
         iterator++;
 

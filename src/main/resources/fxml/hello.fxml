@@ -10,7 +10,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="777.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wboguta.GuiController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="777.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wboguta.GuiController">
    <children>
       <Button fx:id="buttonRun" layoutX="683.0" layoutY="38.0" mnemonicParsing="false" onAction="#buttonRunClicked" prefHeight="25.0" prefWidth="58.0" text="Run" />
       <ComboBox fx:id="comboBoxFunctions" editable="true" layoutX="72.0" layoutY="14.0" prefWidth="150.0">
@@ -37,8 +37,8 @@
       <TextField fx:id="textFieldGenotypeSize" layoutX="329.0" layoutY="51.0" prefHeight="25.0" prefWidth="46.0" text="8" />
       <TextField fx:id="textFieldIterations" layoutX="455.0" layoutY="51.0" prefHeight="25.0" prefWidth="46.0" text="10" />
       <Label layoutX="397.0" layoutY="55.0" text="Iterations" />
-      <TextField layoutX="329.0" layoutY="14.0" prefHeight="25.0" prefWidth="46.0" />
-      <TextField layoutX="455.0" layoutY="14.0" prefHeight="25.0" prefWidth="46.0" />
+      <TextField fx:id="textFieldRangeFrom" layoutX="329.0" layoutY="14.0" prefHeight="25.0" prefWidth="46.0" text="-10" />
+      <TextField fx:id="textFieldRangeTo" layoutX="455.0" layoutY="14.0" prefHeight="25.0" prefWidth="46.0" text="10" />
       <Label layoutX="260.0" layoutY="18.0" text="Range from" />
       <Label layoutX="398.0" layoutY="18.0" text="Range to" />
    </children>

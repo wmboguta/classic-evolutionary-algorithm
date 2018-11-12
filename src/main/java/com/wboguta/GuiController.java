@@ -25,6 +25,8 @@ public class GuiController
     @FXML private TextField textFieldPopulationSize;
     @FXML private TextField textFieldGenotypeSize;
     @FXML private TextField textFieldIterations;
+    @FXML private TextField textFieldRangeFrom;
+    @FXML private TextField textFieldRangeTo;
 
 
     @FXML
@@ -38,15 +40,18 @@ public class GuiController
             return;
         }
 
-        Population population = new Population(Integer.parseInt(textFieldPopulationSize.getText()), Integer.parseInt(textFieldGenotypeSize.getText()));
+        Population population = new Population(Integer.parseInt(textFieldPopulationSize.getText()), Integer.parseInt(textFieldGenotypeSize.getText()),
+                Double.parseDouble(textFieldRangeFrom.getText()), Double.parseDouble(textFieldRangeTo.getText()));
         System.out.print(population);
 
 
-        XYChart.Series series1 = new XYChart.Series();
+
+
+        int iterations = Integer.parseInt(textFieldIterations.getText());
 
 
 
-       // for(int i=0; i<5; i++) {
+        for(int i=0; i<iterations; i++) {
             population.crossingOver();
             //System.out.print(population);
 
@@ -55,14 +60,26 @@ public class GuiController
 
             population.selection(function);
             //System.out.print(population);
-        //}
 
-        series1.setName("Option 1");
+
+
+
+        }
+
+        XYChart.Series series1 = new XYChart.Series();
+        //series1.setName("Option 1");
         while(population.isNextIndividualXY()) {
             double[] xy = population.getNextIndividualXY();
             series1.getData().add(new XYChart.Data(xy[0], xy[1]));
         }
         scatterChart.getData().addAll(series1);
+
+//        series1.setName("Option 1");
+//        while(population.isNextIndividualXY()) {
+//            double[] xy = population.getNextIndividualXY();
+//            series1.getData().add(new XYChart.Data(xy[0], xy[1]));
+//        }
+//        scatterChart.getData().addAll(series1);
 
         System.out.print(population);
 
