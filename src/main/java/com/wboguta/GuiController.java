@@ -1,12 +1,12 @@
 package com.wboguta;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import org.mariuszgromada.math.mxparser.Argument;
 import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.Function;
 import org.mariuszgromada.math.mxparser.mXparser;
@@ -20,68 +20,138 @@ public class GuiController
     private static final Logger log = LoggerFactory.getLogger(GuiController.class);
 
     @FXML private Button buttonRun;
-    @FXML private ComboBox comboBoxFunctions;
+    @FXML private ComboBox comboBoxFunction;
     @FXML private ScatterChart scatterChart;
     @FXML private TextField textFieldPopulationSize;
     @FXML private TextField textFieldGenotypeSize;
     @FXML private TextField textFieldIterations;
     @FXML private TextField textFieldRangeFrom;
     @FXML private TextField textFieldRangeTo;
+    @FXML private Slider sliderSpeed;
+    @FXML private CheckBox checkBoxMutation;
+    @FXML private CheckBox checkBoxCrossingOver;
+
+    @FXML
+    public void initialize() {
+        comboBoxFunction.getSelectionModel().selectFirst();
+    }
+
+
+    public void plotFunction(Function function, double rangeFrom, double rangeTo) {
+        Argument x;
+        Expression expression;
+        final XYChart.Series<Double, Double> series = new XYChart.Series<Double, Double>();
+        double step = (rangeTo-rangeFrom)/1000;
+        for (double i = rangeFrom; i <= rangeTo; i = i + step) {
+            x = new Argument("x", i);
+            expression = new Expression("f(x)", function, x);
+            series.getData().add(new XYChart.Data<Double, Double>(i, expression.calculate()));
+        }
+        scatterChart.getData().add(series);
+    }
 
 
     @FXML
-    void buttonRunClicked(ActionEvent event) throws CloneNotSupportedException {
+    void comboBoxItemSelected(ActionEvent event) {
+        // Change ranges
+        switch (comboBoxFunction.getSelectionModel().getSelectedIndex()) {
+            case(0):  textFieldRangeFrom.setText("-1"); textFieldRangeTo.setText("1"); break;
+            case(1):  textFieldRangeFrom.setText("0"); textFieldRangeTo.setText("3");break;
+        }
+    }
 
-        if(comboBoxFunctions.getValue() == null) return;
 
-        Function function = new Function((String)comboBoxFunctions.getValue());
+    @FXML
+    void buttonRunClicked(ActionEvent event) {
+
+        buttonRun.setDisable(true);
+
+        // parse function
+        final Function function = new Function((String)comboBoxFunction.getValue());
         if(!function.checkSyntax()) {
             mXparser.consolePrintln(function.getErrorMessage());
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Could not parse function");
+            alert.setContentText(function.getErrorMessage());
+            alert.showAndWait();
+
+            buttonRun.setDisable(false);
             return;
         }
 
-        Population population = new Population(Integer.parseInt(textFieldPopulationSize.getText()), Integer.parseInt(textFieldGenotypeSize.getText()),
-                Double.parseDouble(textFieldRangeFrom.getText()), Double.parseDouble(textFieldRangeTo.getText()));
-        System.out.print(population);
+        // get values from fields
+        int populationSize = Integer.parseInt(textFieldPopulationSize.getText());
+        int genotypeSize = Integer.parseInt(textFieldGenotypeSize.getText());
+        double rangeFrom = Double.parseDouble(textFieldRangeFrom.getText());
+        double rangeTo = Double.parseDouble(textFieldRangeTo.getText());
+        final int iterations = Integer.parseInt(textFieldIterations.getText());
 
+        // create population
+        final Population population = new Population(populationSize, genotypeSize, rangeFrom, rangeTo);
 
+        // clear chart and draw function
+        scatterChart.getData().clear();
+        plotFunction(function, rangeFrom, rangeTo);
 
+        final XYChart.Series series = new XYChart.Series();
 
-        int iterations = Integer.parseInt(textFieldIterations.getText());
+        //start new thread
+        new Thread() {
 
+            private void plotIndividuals(final int i) throws InterruptedException {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        series.getData().clear();
+                        scatterChart.getData().removeAll(series);
+                        while (population.isNextIndividualXY()) {
+                            double[] xy = population.getNextIndividualXY();
+                            series.getData().add(new XYChart.Data(xy[0], xy[1]));
+                        }
+                        scatterChart.getData().addAll(series);
+                        textFieldIterations.setText(String.valueOf(i));
+                    }
+                });
+                Thread.sleep(((Double) sliderSpeed.getValue()).intValue()/2);
+            }
 
+            public void run() {
+                try {
 
-        for(int i=0; i<iterations; i++) {
-            population.crossingOver();
-            //System.out.print(population);
+                    //calculate probs and adaptation at first
+                    population.calculateAdaptation(function);
+                    population.calculateProbs();
 
-            population.mutation();
-            //System.out.print(population);
+                    for (int i = 0; i < iterations; i++) {
 
-            population.selection(function);
-            //System.out.print(population);
+                        // put population on a chart
+                        plotIndividuals(i);
 
+                        if (checkBoxMutation.isSelected()) {
+                            population.mutation();
+                        }
 
+                        if (checkBoxCrossingOver.isSelected()) {
+                            population.crossingOver();
+                        }
 
+                        population.calculateAdaptation(function);
+                        population.calculateProbs();
 
-        }
+                        plotIndividuals(i);
 
-        XYChart.Series series1 = new XYChart.Series();
-        //series1.setName("Option 1");
-        while(population.isNextIndividualXY()) {
-            double[] xy = population.getNextIndividualXY();
-            series1.getData().add(new XYChart.Data(xy[0], xy[1]));
-        }
-        scatterChart.getData().addAll(series1);
+                        population.pickNewPopulation();
+                    }
 
-//        series1.setName("Option 1");
-//        while(population.isNextIndividualXY()) {
-//            double[] xy = population.getNextIndividualXY();
-//            series1.getData().add(new XYChart.Data(xy[0], xy[1]));
-//        }
-//        scatterChart.getData().addAll(series1);
+                    buttonRun.setDisable(false);
 
-        System.out.print(population);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }.start();
 
 
     }

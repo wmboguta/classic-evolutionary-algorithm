@@ -17,6 +17,22 @@ public class RandomItem {
         rand = new Random();
     }
 
+    public RandomItem(){
+        rand = new Random();
+        numbers = new ArrayList<Integer>();
+        probs = new ArrayList<Double>();
+    }
+
+    public void clearLists() {
+        numbers.clear();
+        probs.clear();
+    }
+
+    public void addToLists(int number, double probability) {
+        numbers.add(number);
+        probs.add(probability);
+    }
+
     public int random(){
         double p = rand.nextDouble();
         double sum = 0.0;

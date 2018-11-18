@@ -5,21 +5,16 @@ import java.util.Random;
 
 public class Individual implements Cloneable{
 
+
     private BitSet genotype;
     private int genotypeSize;
     private double adaptation;
     private double probability;
-    private double rangeFrom;
-    private double rangeTo;
 
 
-    public Individual(int genotypeSize, double rangeFrom, double rangeTo) {
+    public Individual(int genotypeSize) {
         this.genotypeSize = genotypeSize;
-        this.rangeFrom = rangeFrom;
-        this.rangeTo =  rangeTo;
-
         genotype = new BitSet(genotypeSize);
-
         for (int i = 0; i < genotypeSize; i++) {
             genotype.set(i, new Random().nextBoolean());
         }
@@ -27,14 +22,11 @@ public class Individual implements Cloneable{
 
     @Override
     public Object clone() throws CloneNotSupportedException{
-
         Individual individual = null;
         individual = (Individual) super.clone();
         individual.genotype = (BitSet) this.genotype.clone();
-
         return individual;
     }
-
 
     public int decodeGenotypeInt() {
         int result = 0;
@@ -47,14 +39,23 @@ public class Individual implements Cloneable{
         return result;
     }
 
-    public double decodeGenotypeDouble() {
+    public double decodeGenotypeDouble(double rangeFrom, double rangeTo) {
         double floatingPoint;
         floatingPoint = rangeFrom + ((rangeTo-rangeFrom)*decodeGenotypeInt()) / (Math.pow(2, genotypeSize) - 1);
         return floatingPoint;
     }
 
-
-
+    @Override
+    public String toString() {
+        String str = "";
+        for (int i = genotypeSize-1; i >= 0; i--) {
+            str += genotype.get(i) ? 1 : 0;
+        }
+        str += " genotypeSize=" + genotypeSize;
+        str += " adaptation=" + getAdaptation();
+        str += " probability=" + probability;
+        return str;
+    }
 
     public void flipBit(int index) {
         genotype.flip(index);
@@ -76,23 +77,6 @@ public class Individual implements Cloneable{
         return adaptation;
     }
 
-    @Override
-    public String toString() {
-
-        String str = "";
-
-        for (int i = genotypeSize-1; i >= 0; i--) {
-            str += genotype.get(i) ? 1 : 0;
-        }
-
-        str += " genotypeSize=" + genotypeSize;
-        str += " adaptation=" + getAdaptation();
-        str += " probability=" + probability;
-
-        return str;
-    }
-
-
     public double getProbability() {
         return probability;
     }
@@ -100,4 +84,5 @@ public class Individual implements Cloneable{
     public void setProbability(double probability) {
         this.probability = probability;
     }
+
 }

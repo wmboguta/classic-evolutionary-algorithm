@@ -32,3 +32,19 @@
     -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
 }
 
+.chart-symbol {
+    -fx-background-radius: 2px ;
+    -fx-padding: 2px ;
+}
+
+.chart-symbol.default-color0 {
+	-fx-background-color: black;
+	-fx-background-radius: 1px;
+    -fx-padding: 1px;
+}
+
+.chart-symbol.default-color1 {
+	-fx-background-color: red;
+	-fx-background-radius: 6px;
+	-fx-padding: 6px;
+}
