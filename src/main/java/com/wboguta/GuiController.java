@@ -123,7 +123,7 @@ public class GuiController
                     population.calculateAdaptation(function);
                     population.calculateProbs();
 
-                    for (int i = 0; i < iterations; i++) {
+                    for (int i = 1; i <= iterations; i++) {
 
                         // put population on a chart
                         plotIndividuals(i);
