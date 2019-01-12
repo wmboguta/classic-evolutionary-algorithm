@@ -34,8 +34,8 @@
       <TextField fx:id="textFieldRangeTo" layoutX="455.0" layoutY="14.0" prefHeight="25.0" prefWidth="46.0" text="1" />
       <Label layoutX="260.0" layoutY="18.0" text="Range from" />
       <Label layoutX="398.0" layoutY="18.0" text="Range to" />
-      <Button fx:id="buttonNext" layoutX="728.0" layoutY="51.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Next" />
-      <Slider fx:id="sliderSpeed" layoutX="574.0" layoutY="19.0" majorTickUnit="100.0" max="500.0" prefHeight="32.0" prefWidth="129.0" showTickLabels="true" value="30.0" />
+      <Button fx:id="buttonStop" disable="true" layoutX="728.0" layoutY="51.0" mnemonicParsing="false" onAction="#buttonStopClicked" prefHeight="25.0" prefWidth="58.0" text="Stop" />
+      <Slider fx:id="sliderSpeed" layoutX="574.0" layoutY="19.0" majorTickUnit="100.0" max="500.0" min="10.0" prefHeight="32.0" prefWidth="129.0" showTickLabels="true" value="30.0" />
       <Label layoutX="529.0" layoutY="19.0" text="Speed" />
       <CheckBox fx:id="checkBoxMutation" layoutX="527.0" layoutY="55.0" mnemonicParsing="false" selected="true" text="Mutation" />
       <CheckBox fx:id="checkBoxCrossingOver" layoutX="607.0" layoutY="55.0" mnemonicParsing="false" selected="true" text="Crossing Over" />
