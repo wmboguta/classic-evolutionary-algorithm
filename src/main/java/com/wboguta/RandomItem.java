@@ -1,7 +1,5 @@
 package com.wboguta;
 
-import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -43,4 +41,5 @@ public class RandomItem {
         }
         return numbers.get(i-1);
     }
+
 }

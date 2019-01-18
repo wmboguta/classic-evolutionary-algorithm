@@ -91,7 +91,7 @@ public class GuiController {
         textFieldRangeTo.setDisable(true);
         textFieldPopulationSize.setDisable(true);
 
-        // parse function
+        // Parse function
         final Function function = new Function((String)comboBoxFunction.getValue());
         if(!function.checkSyntax()) {
             mXparser.consolePrintln(function.getErrorMessage());
@@ -114,23 +114,23 @@ public class GuiController {
             return;
         }
 
-        // get values from fields
+        // Get values from fields
         int populationSize = Integer.parseInt(textFieldPopulationSize.getText());
         int genotypeSize = Integer.parseInt(textFieldGenotypeSize.getText());
         double rangeFrom = Double.parseDouble(textFieldRangeFrom.getText());
         double rangeTo = Double.parseDouble(textFieldRangeTo.getText());
         final int iterations = Integer.parseInt(textFieldIterations.getText());
 
-        // create population
+        // Create population
         final Population population = new Population(populationSize, genotypeSize, rangeFrom, rangeTo);
 
-        // clear chart and draw function
+        // Clear chart and draw function
         scatterChart.getData().clear();
         plotFunction(function, rangeFrom, rangeTo);
 
         final XYChart.Series series = new XYChart.Series();
 
-        //start new thread
+        //Start new thread
         new Thread() {
 
             private void plotIndividuals(final int i) throws InterruptedException {
@@ -138,22 +138,24 @@ public class GuiController {
                 Platform.runLater(new Runnable() {
                     public void run() {
 
+                        series.getData().clear();
+                        scatterChart.getData().removeAll(series);
+
                         try {
                             semaphore.acquire(); // Acquire access
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
 
-                        series.getData().clear();
-                        scatterChart.getData().removeAll(series);
                         while (population.isNextIndividualXY()) {
                             double[] xy = population.getNextIndividualXY();
                             series.getData().add(new XYChart.Data(xy[0], xy[1]));
                         }
+                        semaphore.release(); // Release lock
 
                         scatterChart.getData().addAll(series);
                         textFieldIterations.setText(String.valueOf(i));
-                        semaphore.release(); // Release lock
+
                     }
                 });
 
@@ -163,13 +165,13 @@ public class GuiController {
             public void run() {
                 try {
 
-                    //calculate probs and adaptation at first
+                    // Calculate probs and adaptation at first
                     population.calculateAdaptation(function);
                     population.calculateProbs();
 
                     for (int i = 1; i <= iterations; i++) {
 
-                        // put population on a chart
+                        // Put population on a chart
                         plotIndividuals(i);
 
                         semaphore.acquire(); // Acquire access

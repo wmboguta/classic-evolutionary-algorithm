@@ -43,15 +43,15 @@ public class Population {
     }
 
     public void mutation() {
-        //pick random individual
+        // Pick random individual
         Individual randomIndividual = container.get(getRandomNumberInRange(0, populationSize-1));
 
-        //pick random genotype bit and flip it's value
+        // Pick random genotype bit and flip it's value
         randomIndividual.flipBit(getRandomNumberInRange(0, genotypeSize-1));
     }
 
     public void crossingOver() {
-        //pick two random individuals
+        // Pick two random individuals
         Individual randomIndividual1 = container.get(getRandomNumberInRange(0, populationSize-1));
         Individual randomIndividual2 = container.get(getRandomNumberInRange(0, populationSize-1));
 
@@ -60,13 +60,13 @@ public class Population {
             return;
         }
 
-        //decide if individuals will cross over
+        // Decide if individuals will cross over
         if(!new Random().nextBoolean()) return;
 
-        //pick random crossingOverPoint
+        // Pick random crossingOverPoint
         int crossingOverPoint = getRandomNumberInRange(1, genotypeSize - 2);
 
-        //create copies of individuals
+        // Create copies of individuals
         Individual tempRandomIndividual1;
         Individual tempRandomIndividual2;
         try {
@@ -77,7 +77,7 @@ public class Population {
             return;
         }
 
-        //change bits between individuals starting from picked point
+        // Change bits between individuals starting from picked point
         for (int i = crossingOverPoint; i >= 0; i--) {
             randomIndividual1.setBit(i, tempRandomIndividual2.getBit(i));
             randomIndividual2.setBit(i, tempRandomIndividual1.getBit(i));
